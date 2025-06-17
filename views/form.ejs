@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload or Generate Audio</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 2em; }
+    input, textarea { width: 100%; margin-bottom: 1em; }
+    .error { color: red; margin-bottom: 1em; }
+    audio { margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Upload or Generate Audio</h1>
+
+  <% if (error) { %>
+    <div class="error"><%= error %></div>
+  <% } %>
+
+  <form id="audioForm" action="/submit" method="POST" enctype="multipart/form-data">
+    <label>Upload Audio:</label>
+    <input type="file" name="audioFile" accept="audio/*">
+
+    <label>Text for TTS:</label>
+    <textarea name="textInput" id="textInput" rows="4" placeholder="Enter text..."></textarea>
+
+    <div id="previewSection" style="display:none;">
+      <p><strong>Preview:</strong></p>
+      <audio id="audioPreview" controls></audio>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const previewAudio = document.getElementById('audioPreview');
+    const previewSection = document.getElementById('previewSection');
+
+    textInput.addEventListener('input', () => {
+      const text = textInput.value.trim();
+      if (text.length === 0) {
+        previewSection.style.display = 'none';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('textInput', text);
+
+      fetch('/preview', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+          if (data.previewPath) {
+            previewAudio.src = data.previewPath;
+            previewSection.style.display = 'block';
+          } else {
+            previewSection.style.display = 'none';
+          }
+        });
+    });
+  </script>
+</body>
+</html>
