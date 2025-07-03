@@ -1,32 +1,30 @@
-<h2>Convert Text to Speech</h2>
-<form id="ttsForm">
-  <input type="text" name="text" placeholder="Enter text" required>
-  <select name="language">
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-    <option value="mr">Marathi</option>
-  </select>
-  <button type="submit">Convert</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text-to-Speech / Audio Upload</title>
+</head>
+<body>
+  <h2>Convert Text to Speech OR Upload Audio File</h2>
 
-<script>
-document.getElementById('ttsForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const text = e.target.text.value;
-  const language = e.target.language.value;
+  <% if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
 
-  const res = await fetch('/api/tts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, language })
-  });
+  <form action="/submit" method="POST" enctype="multipart/form-data">
+    <label>Text:</label><br>
+    <textarea name="textInput" rows="4" cols="50" placeholder="Enter text to convert..."></textarea><br><br>
 
-  const data = await res.json();
-  if (data.filename) {
-    alert('Conversion successful!');
-    window.location.reload();
-  } else {
-    alert('Conversion failed');
-  }
-});
-</script>
+    <label>Language:</label><br>
+    <select name="lang">
+      <option value="en-us">English</option>
+      <option value="hi-in">Hindi</option>
+      <option value="mr-in">Marathi</option>
+    </select><br><br>
+
+    <label>Or Upload Audio File:</label><br>
+    <input type="file" name="audioFile" accept="audio/*"><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
