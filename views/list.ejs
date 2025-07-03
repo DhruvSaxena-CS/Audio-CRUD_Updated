@@ -1,0 +1,11 @@
+<ul>
+  <% audios.forEach(audio => { %>
+    <li>
+      <% if (audio.text) { %>
+        <p><strong>Text:</strong> <%= audio.text %></p>
+      <% } %>
+      <audio controls src="/audio/<%= audio.filename %>"></audio>
+      <p><strong>Uploaded:</strong> <%= audio.uploadedAt %></p>
+    </li>
+  <% }) %>
+</ul>

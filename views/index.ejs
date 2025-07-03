@@ -1,0 +1,32 @@
+<h2>Convert Text to Speech</h2>
+<form id="ttsForm">
+  <input type="text" name="text" placeholder="Enter text" required>
+  <select name="language">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="mr">Marathi</option>
+  </select>
+  <button type="submit">Convert</button>
+</form>
+
+<script>
+document.getElementById('ttsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = e.target.text.value;
+  const language = e.target.language.value;
+
+  const res = await fetch('/api/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, language })
+  });
+
+  const data = await res.json();
+  if (data.filename) {
+    alert('Conversion successful!');
+    window.location.reload();
+  } else {
+    alert('Conversion failed');
+  }
+});
+</script>
