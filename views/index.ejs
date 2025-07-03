@@ -2,6 +2,33 @@
 <html>
 <head>
   <title>Text-to-Speech / Audio Upload</title>
+  <script>
+    async function previewAudio() {
+      const textInput = document.querySelector('textarea[name="textInput"]').value;
+      const lang = document.querySelector('select[name="lang"]').value;
+
+      if (!textInput.trim()) {
+        alert('Enter some text for preview');
+        return;
+      }
+
+      const response = await fetch('/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ textInput, lang })
+      });
+
+      const result = await response.json();
+      if (result.previewPath) {
+        const audio = document.getElementById('previewPlayer');
+        audio.src = result.previewPath;
+        audio.style.display = 'block';
+        audio.play();
+      } else {
+        alert('Preview failed');
+      }
+    }
+  </script>
 </head>
 <body>
   <h2>Convert Text to Speech OR Upload Audio File</h2>
@@ -25,6 +52,10 @@
     <input type="file" name="audioFile" accept="audio/*"><br><br>
 
     <button type="submit">Submit</button>
+    <button type="button" onclick="previewAudio()">Preview</button>
   </form>
+
+  <br>
+  <audio id="previewPlayer" controls style="display:none;"></audio>
 </body>
 </html>
