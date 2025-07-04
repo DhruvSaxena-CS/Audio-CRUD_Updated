@@ -3,7 +3,6 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const Audio = require('../models/audio');
 
 const VOICERSS_API_KEY = "ecfd3b9535f240d68bd6de490ecdf4f2";
 
